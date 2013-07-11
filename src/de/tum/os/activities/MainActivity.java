@@ -1,4 +1,4 @@
-package com.example.showcasedemo;
+package de.tum.os.activities;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
@@ -18,6 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import de.tum.os.activities.models.ICommandExecuter;
+import de.tum.os.activities.models.PlaybackMode;
+import com.example.showcasedemo.R;
 import com.gdevelop.gwt.syncrpc.SyncProxy;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nanocritical.nanogest.Nanogest;
@@ -30,12 +33,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import de.tum.os.network.ConnectionListener;
 import de.tum.os.sa.client.IShowcaseServiceAsync;
+import de.tum.os.sa.shared.Command;
 import de.tum.os.sa.shared.DTO.PlaybackDevice;
 import de.tum.os.sa.shared.DeviceType;
 
 public class MainActivity extends Activity implements Nanogest.GestureListener,
-		Nanogest.ErrorListener, OnPreparedListener {
+		Nanogest.ErrorListener, OnPreparedListener, ICommandExecuter {
 
 	LinearLayout mainLayout;
 	Nanogest ngest;
@@ -78,14 +83,16 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
 	}
 
     private void connectToServer() {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                connectToServlet();
-            }
-        };
-        Thread t = new Thread(r);
-        t.start();
+//        Runnable r = new Runnable() {
+//            @Override
+//            public void run() {
+//                connectToServlet();
+//            }
+//        };
+//        Thread t = new Thread(r);
+//        t.start();
+        (new ConnectionListener(this)).StartListening();
+
     }
 
     private void connectToServlet() {
@@ -447,4 +454,31 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
 		this.videoPlayer = arg0;
 
 	}
+
+    @Override
+    public void ExecuteCommand(final Command command) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                displayVideo("");
+                currentMode = PlaybackMode.video;
+                switch (command.commandType) {
+                    case play: {
+                        if (mainLayout.getChildAt(0) instanceof VideoView) {
+                            VideoView vv = (VideoView) mainLayout.getChildAt(0);
+                            vv.start();
+                        }
+                        break;
+                    }
+                    case pause: {
+                        if (mainLayout.getChildAt(0) instanceof VideoView) {
+                            VideoView vv = (VideoView) mainLayout.getChildAt(0);
+                            vv.pause();
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+    }
 }
