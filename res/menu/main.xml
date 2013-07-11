@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/action_connect"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/action_connect"/>
+
+    <item
+            android:id="@+id/action_register"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/action_register"/>
+    <item
+            android:id="@+id/action_showText"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/action_showText"/>
+    <item
+            android:id="@+id/action_showImages"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/action_showImages"/>
+    <item
+            android:id="@+id/action_showVideo"
+            android:orderInCategory="100"
+            android:showAsAction="never"
+            android:title="@string/action_showVideo"/>
+
+</menu>

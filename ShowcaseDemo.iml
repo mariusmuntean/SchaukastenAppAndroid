@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android" name="Android">
+      <configuration />
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/gen" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <content url="file://G:/Marius M/Marius Master II/HiWi_WORK/GIT/Showcase Webapp/Schaukasten Webapp/ShowcaseApp/src">
+      <sourceFolder url="file://G:/Marius M/Marius Master II/HiWi_WORK/GIT/Showcase Webapp/Schaukasten Webapp/ShowcaseApp/src" isTestSource="false" />
+      <excludeFolder url="file://G:/Marius M/Marius Master II/HiWi_WORK/GIT/Showcase Webapp/Schaukasten Webapp/ShowcaseApp/src/de/tum/os/sa/client/models" />
+      <excludeFolder url="file://G:/Marius M/Marius Master II/HiWi_WORK/GIT/Showcase Webapp/Schaukasten Webapp/ShowcaseApp/src/de/tum/os/sa/client/views" />
+      <excludeFolder url="file://G:/Marius M/Marius Master II/HiWi_WORK/GIT/Showcase Webapp/Schaukasten Webapp/ShowcaseApp/src/de/tum/os/sa/server" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="module" module-name="ACTIVITY_ENTRY_NAME" />
+    <orderEntry type="module-library" exported="">
+      <library name="GWTServices">
+        <CLASSES />
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://G:/Marius M/Marius Master II/HiWi_WORK/RentalSystemGAE/ShowcaseApp/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
+

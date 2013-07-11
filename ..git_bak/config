@@ -1,0 +1,14 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+	hideDotFiles = dotGitOnly
+[remote "ShowcaseAndroidApp"]
+	url = https://github.com/mariusmuntean/Schaukastenapp.git
+	fetch = +refs/heads/*:refs/remotes/ShowcaseAndroidApp/*
+[gui]
+	wmstate = normal
+	geometry = 1236x803+130+130 526 192

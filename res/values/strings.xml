@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ShowcaseDemo</string>
+    <string name="action_showVideo">Show Video</string>
+	<string name="action_showText">Show Text</string>
+	<string name="action_showImages">Show images</string>
+    <string name="action_connect">Connect</string>
+	<string name="action_register">Register</string>
+
+</resources>
+
