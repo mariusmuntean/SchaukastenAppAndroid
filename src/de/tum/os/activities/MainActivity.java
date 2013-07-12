@@ -83,16 +83,14 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
 	}
 
     private void connectToServer() {
-//        Runnable r = new Runnable() {
-//            @Override
-//            public void run() {
-//                connectToServlet();
-//            }
-//        };
-//        Thread t = new Thread(r);
-//        t.start();
-        (new ConnectionListener(this)).StartListening();
-
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                connectToServlet();
+            }
+        };
+        Thread t = new Thread(r);
+        t.start();
     }
 
     private void connectToServlet() {
@@ -131,7 +129,11 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
             }
         });
 
-
+        try {
+            (new ConnectionListener(s, this)).StartListening();
+        } catch (Exception e) {
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private void instantiateService() {
@@ -202,20 +204,37 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
 		case R.id.action_register: {
 				if(serviceAsync!=null){
 					AsyncCallback<Boolean> registerResultCallback = new AsyncCallback<Boolean>() {
-						
-						@Override
-						public void onSuccess(Boolean arg0) {
-                            if(arg0){
-                            Log.i("showcase","Registered on server as "+me.toString()+" just fine");
+                        Toast toast;
+                        String message;
+                        @Override
+                        public void onSuccess(Boolean arg0) {
+
+                            if (arg0) {
+                                message = "Registered on server as " + me.toString() + " just fine";
+                                Log.i("showcase", message);
+                            } else {
+                                message = "Couldn't register on server as " + me.toString();
+                                Log.i("showcase", message);
                             }
-                            else {
-                                Log.i("showcase","Couldn't register on server as "+me.toString());
-                            }
-							
-						}
-						@Override
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    toast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG);
+                                    toast.show();
+                                }
+                            });
+                        }
+
+                        @Override
 						public void onFailure(Throwable arg0) {
-                            Log.i("showcase","Couldn't register on server. Maybe network issues");
+                            message = "Couldn't register on server. Maybe network issues";
+                            Log.i("showcase",message);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    toast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG);
+                                }
+                            });
 						}
 					};
 					serviceAsync.registerDevice(me, registerResultCallback);

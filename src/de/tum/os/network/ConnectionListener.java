@@ -22,8 +22,12 @@ public class ConnectionListener {
     ObjectInputStream ois;
     ICommandExecuter commandExecuter;
 
-    public ConnectionListener(ICommandExecuter commandExecuter) {
+    public ConnectionListener(Socket socket, ICommandExecuter commandExecuter) throws Exception {
+        if(socket == null || socket.isClosed() || commandExecuter == null){
+            throw new Exception("Arguments cannot be null");
+        }
         this.commandExecuter = commandExecuter;
+        this.socket = socket;
     }
 
 
@@ -33,25 +37,24 @@ public class ConnectionListener {
         Runnable r = new Runnable() {
             @Override
             public void run() {
+//                try {
+//                    socket = new Socket(serverIP, serverPort);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
                 try {
-                    socket = new Socket(serverIP, serverPort);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                while (go) {
-                    try {
-                        ois = new ObjectInputStream(socket.getInputStream());
+                    ois = new ObjectInputStream(socket.getInputStream());
+                    while (go) {
                         Command command = (Command) ois.readObject();
                         commandExecuter.ExecuteCommand(command);
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         };
         Thread t = new Thread(r);
         t.start();
-
     }
 
     public void StopListening() {
