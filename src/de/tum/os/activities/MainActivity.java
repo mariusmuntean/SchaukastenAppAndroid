@@ -18,8 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
-import de.tum.os.activities.models.ICommandExecuter;
-import de.tum.os.activities.models.PlaybackMode;
+import de.tum.os.models.ICommandExecuter;
+import de.tum.os.models.PlaybackMode;
 
 import com.example.showcasedemo.R;
 import com.gdevelop.gwt.syncrpc.SyncProxy;
@@ -39,6 +39,7 @@ import de.tum.os.sa.client.IShowcaseServiceAsync;
 import de.tum.os.sa.shared.Command;
 import de.tum.os.sa.shared.DTO.PlaybackDevice;
 import de.tum.os.sa.shared.DeviceType;
+import de.tum.os.views.FeedViewer;
 
 public class MainActivity extends Activity implements Nanogest.GestureListener,
         Nanogest.ErrorListener, OnPreparedListener, ICommandExecuter {
@@ -129,7 +130,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
             public void run() {
                 Toast toast = Toast.makeText(MainActivity.this, finalMessage, Toast.LENGTH_LONG);
                 toast.show();
-                tvConsole.append("\n"+finalMessage);
+                tvConsole.append("\n" + finalMessage);
             }
         });
 
@@ -138,7 +139,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    tvConsole.append("\n"+"ConnectionListener started");
+                    tvConsole.append("\n" + "ConnectionListener started");
                 }
             });
         } catch (Exception e) {
@@ -176,7 +177,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
         // TODO Auto-generated method stub
         super.onPause();
         ngest.stop();
-        tvConsole.append("\n"+"onPause()");
+        tvConsole.append("\n" + "onPause()");
     }
 
     @Override
@@ -212,6 +213,13 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                 return true;
             }
 
+            case R.id.action_showFeed: {
+                displayFeed("http://www.os.in.tum.de/?type=100");
+//                displayFeed("http://pingeb.org/feed");
+                currentMode = PlaybackMode.feed;
+                return true;
+            }
+
             case R.id.action_register: {
                 if (serviceAsync != null) {
                     AsyncCallback<Boolean> registerResultCallback = new AsyncCallback<Boolean>() {
@@ -233,7 +241,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                                 public void run() {
                                     toast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG);
                                     toast.show();
-                                    tvConsole.append("\n"+message);
+                                    tvConsole.append("\n" + message);
                                 }
                             });
                         }
@@ -246,7 +254,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                                 @Override
                                 public void run() {
                                     toast = Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG);
-                                    tvConsole.append("\n"+message);
+                                    tvConsole.append("\n" + message);
                                 }
                             });
                         }
@@ -260,6 +268,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
         }
 
     }
+
 
     @Override
     public void onError(ErrorCode arg0, String arg1, String arg2) {
@@ -316,9 +325,9 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                         if (mainLayout.getChildAt(0) instanceof ScrollView) {
                             ScrollView scroller = (ScrollView) mainLayout.getChildAt(0);
                             TextView tv = (TextView) scroller.getChildAt(0);
-                            float textSize = tv.getTextSize() - 3f < 5f ? 5f : tv
+                            float textSize = tv.getTextSize() - 3f < 7f ? 5f : tv
                                     .getTextSize() - 3f;
-                            // tv.setTextSize(textSize);
+                            tv.setTextSize(textSize);
                         }
                         break;
 
@@ -351,9 +360,9 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                         if (mainLayout.getChildAt(0) instanceof ScrollView) {
                             ScrollView scroller = (ScrollView) mainLayout.getChildAt(0);
                             TextView tv = (TextView) scroller.getChildAt(0);
-                            float textSize = tv.getTextSize() + 5f > 32f ? 32f : tv
+                            float textSize = tv.getTextSize() + 5f > 28f ? 28f : tv
                                     .getTextSize() + 3f;
-                            // tv.setTextSize(textSize);
+                            tv.setTextSize(textSize);
                         }
                         break;
 
@@ -394,8 +403,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                         if (mainLayout.getChildAt(0) instanceof VideoView) {
                             VideoView vv = (VideoView) mainLayout.getChildAt(0);
                             if (videoPlayer != null)
-                                videoPlayer.setVolume(100f, 100f);
-
+                                videoPlayer.setVolume(85f, 85f);
                         }
                         break;
 
@@ -470,6 +478,22 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
         mainLayout.addView(iv);
     }
 
+    private void displayFeed(String feedUrl) {
+        mainLayout.removeAllViews();
+        FeedViewer fw = null;
+        try {
+            fw = new FeedViewer(this, feedUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (fw == null)
+            return;
+
+        mainLayout.addView(fw);
+        tvConsole.append("\n" + "feedViewer added");
+
+    }
+
     private void displayVideo(String filename) {
 
         mainLayout.removeAllViews();
@@ -500,7 +524,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                         if (mainLayout.getChildAt(0) instanceof VideoView) {
                             VideoView vv = (VideoView) mainLayout.getChildAt(0);
                             vv.start();
-                            tvConsole.append("\n"+"Received Play command");
+                            tvConsole.append("\n" + "Received Play command");
                         }
                         break;
                     }
@@ -508,7 +532,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                         if (mainLayout.getChildAt(0) instanceof VideoView) {
                             VideoView vv = (VideoView) mainLayout.getChildAt(0);
                             vv.stopPlayback();
-                            tvConsole.append("\n"+"Received Stop command");
+                            tvConsole.append("\n" + "Received Stop command");
                         }
                         break;
                     }

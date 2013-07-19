@@ -19,7 +19,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="libs" level="project" />
+    <orderEntry type="library" exported="" name="libs" level="project" />
     <orderEntry type="module" module-name="ACTIVITY_ENTRY_NAME" />
     <orderEntry type="module-library" exported="">
       <library name="GWTServices">

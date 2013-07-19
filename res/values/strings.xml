@@ -5,6 +5,7 @@
     <string name="action_showVideo">Show Video</string>
 	<string name="action_showText">Show Text</string>
 	<string name="action_showImages">Show images</string>
+    <string name="action_showFeed">Show Feed</string>
     <string name="action_connect">Connect</string>
 	<string name="action_register">Register</string>
 

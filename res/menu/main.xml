@@ -27,4 +27,11 @@
             android:showAsAction="never"
             android:title="@string/action_showVideo"/>
 
+    <item android:id="@+id/action_showFeed"
+          android:orderInCategory="100"
+          android:showAsAction="never"
+          android:title="@string/action_showFeed">
+          </item>
+
+
 </menu>

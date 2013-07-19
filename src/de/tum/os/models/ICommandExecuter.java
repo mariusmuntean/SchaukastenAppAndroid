@@ -1,4 +1,4 @@
-package de.tum.os.activities.models;
+package de.tum.os.models;
 
 import de.tum.os.sa.shared.Command;
 

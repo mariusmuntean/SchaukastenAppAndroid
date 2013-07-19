@@ -1,13 +1,9 @@
 package de.tum.os.network;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
-import de.tum.os.activities.models.ICommandExecuter;
+import de.tum.os.models.ICommandExecuter;
 import de.tum.os.sa.shared.Command;
 
 /**

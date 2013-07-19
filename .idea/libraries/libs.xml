@@ -4,6 +4,7 @@
       <root url="jar://$PROJECT_DIR$/libs/android-support-v4.jar!/" />
       <root url="jar://$PROJECT_DIR$/libs/SyncProxyAndroid-0.4.jar!/" />
       <root url="jar://$PROJECT_DIR$/../ACTIVITY_ENTRY_NAME/libs/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/Simple-Rss2-Android.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
