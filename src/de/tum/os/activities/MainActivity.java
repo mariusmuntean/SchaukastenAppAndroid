@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import de.tum.os.models.GenericGestures;
 import de.tum.os.models.ICommandExecuter;
 import de.tum.os.models.PlaybackMode;
 
@@ -33,6 +34,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.HashMap;
 
 import de.tum.os.network.ConnectionListener;
 import de.tum.os.sa.client.IShowcaseServiceAsync;
@@ -40,6 +42,9 @@ import de.tum.os.sa.shared.Command;
 import de.tum.os.sa.shared.DTO.PlaybackDevice;
 import de.tum.os.sa.shared.DeviceType;
 import de.tum.os.views.FeedViewer;
+import de.tum.os.views.ImageViewer;
+import de.tum.os.views.TextViewer;
+import de.tum.os.views.VideoViewer;
 
 public class MainActivity extends Activity implements Nanogest.GestureListener,
         Nanogest.ErrorListener, OnPreparedListener, ICommandExecuter {
@@ -67,6 +72,11 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
     String moduleBaseForStaticFiles = "http://127.0.0.1:8888/showcaseapp/";
     String serviceEntryPointUrl = "http://127.0.0.1:8888/showcaseapp/showcaseService";
     IShowcaseServiceAsync serviceAsync;
+
+    FeedViewer feedViewer = null;
+    TextViewer textViewer = null;
+    VideoViewer videoViewer = null;
+    ImageViewer imageViewer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,214 +292,75 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
 
     }
 
+    private HashMap<Gesture, GenericGestures> nanogestToGenericgesture = new HashMap<Gesture, GenericGestures>() {
+        {
+            put(Gesture.SWIPE_UP, GenericGestures.WaveUp);
+            put(Gesture.SWIPE_DOWN, GenericGestures.WaveDown);
+            put(Gesture.SWIPE_LEFT, GenericGestures.WaveLeft);
+            put(Gesture.SWIPE_RIGHT, GenericGestures.WaveRight);
+        }
+    };
+
     @Override
     public void onGesture(Gesture arg0, double arg1) {
         Log.i("SA", "Gesture from nanogest: " + arg0.toString());
-        switch (arg0) {
-            case SWIPE_DOWN: {
-                switch (currentMode) {
-                    case text:
-                        if (mainLayout.getChildAt(0) instanceof ScrollView) {
-                            ScrollView scroller = (ScrollView) mainLayout.getChildAt(0);
-                            scroller.smoothScrollBy(0, 300);
-                        }
-                        break;
 
-                    case video:
-                        if (mainLayout.getChildAt(0) instanceof VideoView) {
-                            VideoView vv = (VideoView) mainLayout.getChildAt(0);
-                            if (videoPlayer != null)
-                                videoPlayer.setVolume(0f, 0f);
-
-                        }
-                        break;
-
-                    case image:
-                        if (mainLayout.getChildAt(0) instanceof ImageView) {
-                            ImageView iv = (ImageView) mainLayout.getChildAt(0);
-                            currentPictureIndex--;
-                            if (currentPictureIndex < 0 || currentPictureIndex > 4)
-                                currentPictureIndex = 0;
-                            iv.setBackgroundResource(imgIds[currentPictureIndex]);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
+        switch (currentMode) {
+            case audio: {
                 break;
             }
-            case SWIPE_LEFT: {
-                switch (currentMode) {
-                    case text:
-                        if (mainLayout.getChildAt(0) instanceof ScrollView) {
-                            ScrollView scroller = (ScrollView) mainLayout.getChildAt(0);
-                            TextView tv = (TextView) scroller.getChildAt(0);
-                            float textSize = tv.getTextSize() - 3f < 7f ? 5f : tv
-                                    .getTextSize() - 3f;
-                            tv.setTextSize(textSize);
-                        }
-                        break;
-
-                    case video:
-                        if (mainLayout.getChildAt(0) instanceof VideoView) {
-                            VideoView vv = (VideoView) mainLayout.getChildAt(0);
-                            vv.start();
-
-                        }
-                        break;
-
-                    case image:
-                        if (mainLayout.getChildAt(0) instanceof ImageView) {
-                            ImageView iv = (ImageView) mainLayout.getChildAt(0);
-                            currentPictureIndex--;
-                            if (currentPictureIndex < 0 || currentPictureIndex > 4)
-                                currentPictureIndex = 0;
-                            iv.setBackgroundResource(imgIds[currentPictureIndex]);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
+            case video: {
+                this.videoViewer.Consume(nanogestToGenericgesture.get(arg0));
                 break;
             }
-            case SWIPE_RIGHT: {
-                switch (currentMode) {
-                    case text:
-                        if (mainLayout.getChildAt(0) instanceof ScrollView) {
-                            ScrollView scroller = (ScrollView) mainLayout.getChildAt(0);
-                            TextView tv = (TextView) scroller.getChildAt(0);
-                            float textSize = tv.getTextSize() + 5f > 28f ? 28f : tv
-                                    .getTextSize() + 3f;
-                            tv.setTextSize(textSize);
-                        }
-                        break;
-
-                    case video:
-                        if (mainLayout.getChildAt(0) instanceof VideoView) {
-                            VideoView vv = (VideoView) mainLayout.getChildAt(0);
-                            vv.pause();
-
-                        }
-                        break;
-
-                    case image:
-                        if (mainLayout.getChildAt(0) instanceof ImageView) {
-                            ImageView iv = (ImageView) mainLayout.getChildAt(0);
-                            currentPictureIndex++;
-                            if (currentPictureIndex < 0 || currentPictureIndex > 4)
-                                currentPictureIndex = 0;
-                            iv.setBackgroundResource(imgIds[currentPictureIndex]);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
+            case text: {
+                this.textViewer.Consume(nanogestToGenericgesture.get(arg0));
                 break;
             }
-            case SWIPE_UP: {
-
-                switch (currentMode) {
-                    case text:
-                        if (mainLayout.getChildAt(0) instanceof ScrollView) {
-                            ScrollView scroller = (ScrollView) mainLayout.getChildAt(0);
-                            scroller.smoothScrollBy(0, -300);
-                        }
-                        break;
-
-                    case video:
-                        if (mainLayout.getChildAt(0) instanceof VideoView) {
-                            VideoView vv = (VideoView) mainLayout.getChildAt(0);
-                            if (videoPlayer != null)
-                                videoPlayer.setVolume(85f, 85f);
-                        }
-                        break;
-
-                    case image:
-                        if (mainLayout.getChildAt(0) instanceof ImageView) {
-                            ImageView iv = (ImageView) mainLayout.getChildAt(0);
-                            currentPictureIndex--;
-                            if (currentPictureIndex < 0 || currentPictureIndex > 4)
-                                currentPictureIndex = 0;
-                            iv.setBackgroundResource(imgIds[currentPictureIndex]);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
+            case feed: {
+                feedViewer.Consume(nanogestToGenericgesture.get(arg0));
                 break;
             }
-
-            default:
+            case image: {
+                imageViewer.Consume(nanogestToGenericgesture.get(arg0));
                 break;
+            }
         }
-
     }
 
     private void displayText(String filename) {
-        // The InputStream opens the resourceId and sends it to the buffer
-        int resourceId = R.raw.lorem;
-        InputStream is = this.getResources().openRawResource(resourceId);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        String readLine = null;
-        StringBuilder sb = new StringBuilder();
-        try {
-            // While the BufferedReader readLine is not null
-            while ((readLine = br.readLine()) != null) {
-                sb.append(readLine);
-                Log.d("TEXT", readLine);
-            }
-
-            // Close the InputStream and BufferedReader
-            is.close();
-            br.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         mainLayout.removeAllViews();
-        // Scrollable
-        ScrollView scrollView = new ScrollView(this);
-        LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT,
-                LayoutParams.FILL_PARENT);
-        scrollView.setLayoutParams(lp);
-        TextView tv = new TextView(this);
-        tv.setText(sb.toString());
-        tv.setTextSize(22f);
-        scrollView.addView(tv);
-        mainLayout.addView(scrollView);
+        this.textViewer = new TextViewer(this);
+
+        if (textViewer == null) {
+            return;
+        }
+
+        mainLayout.addView(textViewer);
+        tvConsole.append("\n" + "textViewer added");
 
     }
 
     private void displayPictures(String pictureFolderName) {
 
         mainLayout.removeAllViews();
-        ImageView iv = new ImageView(this);
-        LayoutParams lp = new LayoutParams(LayoutParams.FILL_PARENT,
-                LayoutParams.FILL_PARENT);
-        iv.setLayoutParams(lp);
-        if (currentPictureIndex < 0 || currentPictureIndex > 4)
-            currentPictureIndex = 0;
-        iv.setBackgroundResource(imgIds[currentPictureIndex]);
-        mainLayout.addView(iv);
+        this.imageViewer = new ImageViewer(this);
+        mainLayout.addView(this.imageViewer);
+        tvConsole.append("\n" + "imageViewer added");
     }
 
     private void displayFeed(String feedUrl) {
         mainLayout.removeAllViews();
-        FeedViewer fw = null;
         try {
-            fw = new FeedViewer(this, feedUrl);
+            feedViewer = new FeedViewer(this, feedUrl, tvConsole);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (fw == null)
+        if (feedViewer == null)
             return;
 
-        mainLayout.addView(fw);
+        mainLayout.addView(feedViewer);
         tvConsole.append("\n" + "feedViewer added");
 
     }
@@ -497,13 +368,9 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
     private void displayVideo(String filename) {
 
         mainLayout.removeAllViews();
-        VideoView vv = new VideoView(this);
-        vv.setMediaController(new MediaController(this));
-        Uri video = Uri.parse("android.resource://" + getPackageName() + "/"
-                + R.raw.test1);
-        vv.setVideoURI(video);
-        vv.setOnPreparedListener(this);
-        mainLayout.addView(vv);
+        this.videoViewer = new VideoViewer(this);
+        mainLayout.addView(this.videoViewer);
+        tvConsole.append("\n" + "videoViewer added");
     }
 
     @Override
