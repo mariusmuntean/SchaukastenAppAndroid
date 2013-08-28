@@ -4,7 +4,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 import de.tum.os.models.ICommandExecuter;
-import de.tum.os.sa.shared.Command;
+import de.tum.os.sa.shared.commands.Command;
 
 /**
  * Created by Marius on 7/11/13.
