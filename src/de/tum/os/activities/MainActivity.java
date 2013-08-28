@@ -38,7 +38,7 @@ import java.util.HashMap;
 
 import de.tum.os.network.ConnectionListener;
 import de.tum.os.sa.client.IShowcaseServiceAsync;
-import de.tum.os.sa.shared.Command;
+import de.tum.os.sa.shared.commands.Command;
 import de.tum.os.sa.shared.DTO.PlaybackDevice;
 import de.tum.os.sa.shared.DeviceType;
 import de.tum.os.views.FeedViewer;
@@ -216,19 +216,18 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
                 currentMode = PlaybackMode.video;
                 return true;
             }
-
-            case R.id.action_connect: {
-                instantiateService();
-                connectToServer();
-                return true;
-            }
-
             case R.id.action_showFeed: {
                 displayFeed("http://www.os.in.tum.de/?type=100");
 //                displayFeed("http://pingeb.org/feed");
                 currentMode = PlaybackMode.feed;
                 return true;
             }
+            case R.id.action_connect: {
+                instantiateService();
+                connectToServer();
+                return true;
+            }
+
 
             case R.id.action_register: {
                 if (serviceAsync != null) {
@@ -386,7 +385,7 @@ public class MainActivity extends Activity implements Nanogest.GestureListener,
             public void run() {
                 displayVideo("");
                 currentMode = PlaybackMode.video;
-                switch (command.commandType) {
+                switch (command.getCommandType()) {
                     case play: {
                         if (mainLayout.getChildAt(0) instanceof VideoView) {
                             VideoView vv = (VideoView) mainLayout.getChildAt(0);
